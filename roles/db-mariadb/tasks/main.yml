@@ -1,0 +1,3 @@
+---
+# tasks file for db-mariadb
+- include: db_mariadb.yml

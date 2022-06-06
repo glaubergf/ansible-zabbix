@@ -1,0 +1,7 @@
+---
+- hosts: local
+  become: true
+  roles:
+  - { role: config-initial, tags: conf_in }
+  - { role: db-mariadb, tags: mdb }
+  - { role: mon-zabbix, tags: zbx }

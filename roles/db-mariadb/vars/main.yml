@@ -1,0 +1,4 @@
+---
+# vars file for db-mariadb
+
+mysql_root_password: root

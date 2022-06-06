@@ -1,0 +1,54 @@
+---
+# Ajustando o TIMEZONE
+- name: Ajustando o timezone do sistema
+  timezone:
+    name: America/Sao_Paulo
+  tags: conf_in
+
+# Alterando o IDIOMA para pt_BR.UTF-8
+- name: Alterando o idioma do sistema, aguarde alguns minutos...
+  command: locale-gen "pt_BR.UTF-8" ; dpkg-reconfigure locales ; update-locale LANG=pt_BR.UTF-8
+  tags: conf_in
+
+# Alterando o layout do TECLADO
+- name: Alterando o layout do teclado do sistema
+  command: /bin/localectl set-keymap br-abnt2
+  tags: conf_in
+
+# Configurando o NTP
+- name: Removendo arquivo '/var/lib/dpkg/lock-frontend' se existir
+  command:
+    cmd: rm /var/lib/dpkg/lock
+    removes: /var/lib/dpkg/lock
+  args:
+    warn: no
+  tags: conf_in
+
+- name: Executando 'apt-get update'
+  apt:
+    update_cache: yes
+  tags: conf_in
+
+- name: Instalando o ntp / ntpdate
+  apt:
+    pkg:
+      - ntp
+      - ntpdate
+    state: latest
+  tags: conf_in
+
+- name: Parando o ntp
+  command: systemctl stop ntp
+  tags: conf_in
+
+- name: Copiando o arquivo de configuração do ntp
+  copy: src=/etc/ntp.conf dest=/etc/ntp.conf owner=root mode=0644
+  tags: conf_in
+
+- name: Ajustando a hora e habilitando o ntp
+  shell: ntpdate -v -b a.st1.ntp.br; systemctl enable ntp
+  tags: conf_in
+
+- name: Iniciando o ntp
+  command: systemctl start ntp
+  tags: conf_in

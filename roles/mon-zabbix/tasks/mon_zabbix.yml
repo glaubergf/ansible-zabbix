@@ -1,0 +1,111 @@
+---
+# Adiconando repositório,instalando e configurando o ZABBIX
+
+- name: Adicionando o repositório do Zabbix Server
+  command: "{{ item }}"
+  args:
+    warn: no
+  with_items:
+    - wget https://repo.zabbix.com/zabbix/6.0/debian/pool/main/z/zabbix-release/zabbix-release_6.0-1+debian11_all.deb
+    - dpkg -i ./zabbix-release_6.0-1+debian11_all.deb
+  tags: zbx
+
+- name: Executando o update nos repositórios
+  apt:
+    update_cache: yes
+  tags: zbx
+
+- name: Instalando o Zabbix com frontend e suporte ao banco de dados MariaDB/MySQL
+  apt:
+    pkg:
+    - zabbix-server-mysql
+    - zabbix-frontend-php
+    - zabbix-nginx-conf
+    - zabbix-sql-scripts
+    - zabbix-agent
+    state: latest
+  tags: zbx
+
+- name: Importando arquivo.sql similar para mariadb/mysql -u <user> -p <password> < arquivo.sql
+  mysql_db:
+    state: import
+    name: zabbix
+    target: /usr/share/doc/zabbix-sql-scripts/mysql/server.sql.gz
+    login_user: zabbix
+    login_password: "{{ mysql_zabbix_password }}"
+  ignore_errors: true
+  tags: zbx
+
+# --------------------------
+# Listar o schema:
+# sudo mysql -u username -p
+# > use zabbix;
+# > show tables;
+# > quit;
+# --------------------------
+
+- name: Configuração do zabbix /etc/zabbix/zabbix_server.conf e inserindo os dados de conexão do banco
+  replace:
+    path: /etc/zabbix/zabbix_server.conf
+    regexp: '{{ item.De }}'
+    replace: '{{ item.Para }}'
+  with_items:
+    #- { De: '^# DBName=', Para: 'DBName=zabbix'}
+    #- { De: '^# DBUser=', Para: 'DBUser=zabbix'}
+    - { De: '^# DBPassword=', Para: 'DBPassword=zabbix'}
+  tags: zbx
+
+- name: Configurando timezone para os parâmetros que o Zabbix usa
+  # No Zabbix 6 não há a necessidade de configurar o timezone, haverá a opção no frontend.
+  lineinfile:
+    path: /etc/php/7.4/fpm/php.ini
+    regexp: ';date.timezone ='
+    line: 'date.timezone = America/Sao_Paulo'
+  tags: zbx
+
+- name: Configurando o PHP para o Zabbix frontend
+  replace:
+    #path: /etc/nginx/conf.d/zabbix.conf
+    path: /etc/zabbix/nginx.conf
+    regexp: '{{ item.De }}'
+    replace: '{{ item.Para }}'
+  with_items:
+    - { De: '^#', Para: ''}
+    - { De: 'example.com', Para: '_'}
+  tags: zbx
+
+- name: Reiniciando o Zabbix Server, Zabbix Agente, Nginx e PHP
+  systemd:
+    name: "{{ item }}"
+    enabled: yes
+    state: restarted
+    daemon_reload: yes
+  with_items:
+    - 'zabbix-server'
+    - 'zabbix-agent'
+    - 'nginx'
+    - 'php7.4-fpm'
+  tags: zbx
+  
+- name: Mudando a porta default do Nginx para não colidir com a do Zabbix
+  replace:
+    path: /etc/nginx/sites-available/default
+    regexp: '{{ item.De }}'
+    replace: '{{ item.Para }}'
+  with_items:
+    - { De: '(80 default_server;)', Para: '82 default_server;'}
+  tags: zbx
+
+- name: Alterando permissões no diretório raiz do Zabbix
+  file:
+    path: /usr/share/zabbix/
+    state: directory
+    recurse: yes
+    owner: root
+    group: root
+    mode: 0775
+  tags: zbx
+
+- name: Reiniciando o Nginx
+  shell: systemctl restart nginx
+  tags: zbx

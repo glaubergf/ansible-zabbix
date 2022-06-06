@@ -1,0 +1,5 @@
+---
+#--- group variables [local:vars]
+ansible_user : zabbix 
+ansible_password : zabbix123
+ansible_become_password : zabbix123

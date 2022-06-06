@@ -1,0 +1,85 @@
+---
+# Instalar e configurar o MARIADB (MySQL)
+
+- name: Instalando o MariaDB Database Server
+  apt:
+    pkg:
+      - mariadb-server
+      - mariadb-client
+      #- python-pymysql
+      - python3-pymysql
+      #- python-apt
+      - python3-apt
+    state: latest
+  tags: mdb
+
+- name: Verificando se o MariaDB está em execução e ao iniciar no boot
+  service:
+    name: mysql
+    state: started
+    enabled: true
+  tags: mdb
+
+- name: Conectando ao servidor usando 'login_unix_socket'
+  mysql_user:
+    name: root
+    password: "{{ mysql_root_password }}"
+    login_unix_socket: /var/run/mysqld/mysqld.sock
+  ignore_errors: true
+  tags: mdb
+
+- name: Removendo contas de usuários 'anônimos' para localhost
+  mysql_user:
+    name: ''
+    host_all: yes
+    state: absent
+    login_user: root
+    login_password: "{{ mysql_root_password }}"
+  tags: mdb
+
+- name: Removendo usuários 'zabbix' para o localhost se existir
+  mysql_user:
+    name: 'zabbix'
+    host: localhost
+    login_user: root
+    login_password: "{{ mysql_root_password }}"
+    state: absent
+  tags: mdb
+
+- name: Removendo o MySQL 'test database'
+  mysql_db:
+    name: 'test'
+    state: absent
+    login_user: root
+    login_password: "{{ mysql_root_password }}"
+  tags: mdb
+
+## REVISAR os abaixos --- não foi executado por ter dado erro
+#- name: Alterando o plugin de autenticação do usuário 'root' do MariaDB para mysql_native_password
+#  shell: mysql -u root -p"{{ mysql_root_password }}" -e 'UPDATE mysql.user SET plugin="mysql_native_password" WHERE user="root" AND host="localhost"'
+#  tags: mdb1
+
+- name: Privilégios de liberação para usuário 'root'
+  shell: mysql -u root -p"{{ mysql_root_password }}" -e 'FLUSH PRIVILEGES'
+  tags: mdb
+
+- name: Criando usuário 'zabbix' para o MariaDB
+  mysql_user:
+    name: zabbix
+    password: zabbix
+    priv: '*.*:ALL,GRANT'
+    login_user: root
+    login_password: "{{ mysql_root_password }}"
+    state: present
+  tags: mdb
+
+- name: Criando banco de dados com nome 'zabbix'
+  mysql_db:
+    name: 'zabbix'
+    login_host: localhost
+    login_user: 'root'
+    login_password: '{{ mysql_root_password }}'
+    encoding: utf8mb4 # utf8
+    collation: utf8mb4_bin # utf8_bin
+    state: present
+  tags: mdb

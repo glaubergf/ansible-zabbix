@@ -1,0 +1,1 @@
+O projeto executa a instalação e configuração do server Zabbix (backend e frontend) em um sistema operacional GNU/Linux Debian.

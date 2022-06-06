@@ -1,0 +1,4 @@
+---
+# vars file for mon-zabbix
+
+mysql_zabbix_password: zabbix
