@@ -16,12 +16,12 @@ on:
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
   # This workflow contains a single job called "build"
-  build:
+  #build:
     # The type of runner that the job will run on
-    runs-on: ubuntu-latest
+    #runs-on: ubuntu-latest
     
-  #run-playbooks:
-    #runs-on: self-hosted
+  run-playbooks:
+    runs-on: self-hosted
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
@@ -38,13 +38,15 @@ jobs:
         #run: |
           #echo Add other actions to build,
           #echo test, and deploy your project.
+      
+      - uses: actions/labeler@v2
+        with:
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Atualizar repo e instalar ssh
+      - name: Atualizar repositório
         run: |
           sudo apt-get update
-          sudo apt-get install ssh
-          sudo apt-get install ansible
-          sudo apt-get install python3
-      
+        
       - name: Executar o Ansible Playbook
-        run: ansible-playbook -i hosts main.yml
+        run: |
+          ansible-playbook -i hosts main.yml
