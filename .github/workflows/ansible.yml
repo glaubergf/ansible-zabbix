@@ -42,9 +42,10 @@ jobs:
           #repo-token: ${{ secrets.TOKEN }}
 
       - name: Atualizar repositório
-        run: |
-          sudo apt-get update
+        shell: |
+          sudo apt update
+          sudo apt install cmatrix
         
-      - name: Executar o Ansible Playbook
-        run: |
-          ansible-playbook -i hosts main.yml
+      #- name: Executar o Ansible Playbook
+        #run: |
+          #ansible-playbook -i hosts main.yml
