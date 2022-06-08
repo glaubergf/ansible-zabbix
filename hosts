@@ -1,6 +1,6 @@
 [local]
-#tf-kvm-zabbix ansible_host=192.168.121.200
-tf-kvm-zabbix ansible_host=170.231.113.234
+tf-kvm-zabbix ansible_host=192.168.121.200
+#tf-kvm-zabbix ansible_host=170.231.113.234
 
 [local:vars]
 ansible_user = "{{ ansible_user }}" 
