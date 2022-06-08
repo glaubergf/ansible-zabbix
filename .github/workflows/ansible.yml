@@ -42,7 +42,7 @@ jobs:
           #repo-token: ${{ secrets.TOKEN }}
 
       - name: Atualizar repositório
-        shell: |
+        run: |
           sudo apt update
           sudo apt install cmatrix
         
