@@ -43,8 +43,8 @@ jobs:
 
       - name: Atualizar repositório
         run: |
-          sudo apt update
-          sudo apt install cmatrix
+          apt update
+          apt install cmatrix
         
       #- name: Executar o Ansible Playbook
         #run: |
