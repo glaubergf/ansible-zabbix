@@ -1,6 +1,6 @@
 ---
 Projeto: ansible-zabbix
-Descrição: O objetivo desse projeto é instalar a ferramenta de monitormanto Zabbix,
+Descrição: O objetivo desse projeto é instalar a ferramenta de monitoramento Zabbix,
            configurar o server, com banco de dados MariaDB, com front e bankend all in one.
 Autor: Glauber GF (mcnd2)
 Atualização: 2022-06-20
