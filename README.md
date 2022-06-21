@@ -10,7 +10,7 @@ Atualização: 2022-06-20
 
 # Instalar e Configurar o Zabbix com o Ansible
 
-O **Zabbix** é um software de nível corporativo ideal para o monitoramento em tempo real de milhões de métricas coletadas de dezenas de milhares de servidores, máquinas virtuais e dispositivos de rede, além de ser de código aberto é também gratuito.
+O **Zabbix** é um software de nível corporativo ideal para o monitoramento em tempo real de milhões de métricas coletadas de milhares de servidores, máquinas virtuais e dispositivos de rede, além de ser de código aberto é também gratuito.
 
 O **Ansible** trabalha com os conceitos de inventário (_lista de máquinas que serão gerenciadas_), playbooks (_comandos ou passo-a-passo a ser executado_) e roles (_modularização do código_). Atualmente o Ansible pertence a **Red Hat**.
 
