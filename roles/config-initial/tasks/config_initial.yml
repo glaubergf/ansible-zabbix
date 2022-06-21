@@ -6,8 +6,12 @@
   tags: conf_in
 
 # Alterando o IDIOMA para pt_BR.UTF-8
-- name: Alterando o idioma do sistema, aguarde alguns minutos...
-  command: locale-gen "pt_BR.UTF-8" ; dpkg-reconfigure locales ; update-locale LANG=pt_BR.UTF-8
+- name: Configurando o idioma do sistema
+  locale_gen:
+    name: en_US.UTF-8
+    state: present
+- name: set as default locale
+  command: localectl set-locale LANG=pt_BR.UTF-8
   tags: conf_in
 
 # Alterando o layout do TECLADO

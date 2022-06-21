@@ -1,14 +1,11 @@
 ---
-# Instalar e configurar o MARIADB (MySQL)
-
+# Instalar e configurar o MariaDB (MySQL)
 - name: Instalando o MariaDB Database Server
   apt:
     pkg:
       - mariadb-server
       - mariadb-client
-      #- python-pymysql
       - python3-pymysql
-      #- python-apt
       - python3-apt
     state: latest
   tags: mdb
@@ -53,11 +50,6 @@
     login_user: root
     login_password: "{{ mysql_root_password }}"
   tags: mdb
-
-## REVISAR os abaixos --- não foi executado por ter dado erro
-#- name: Alterando o plugin de autenticação do usuário 'root' do MariaDB para mysql_native_password
-#  shell: mysql -u root -p"{{ mysql_root_password }}" -e 'UPDATE mysql.user SET plugin="mysql_native_password" WHERE user="root" AND host="localhost"'
-#  tags: mdb1
 
 - name: Privilégios de liberação para usuário 'root'
   shell: mysql -u root -p"{{ mysql_root_password }}" -e 'FLUSH PRIVILEGES'
