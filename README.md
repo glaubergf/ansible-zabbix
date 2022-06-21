@@ -6,7 +6,7 @@ Autor: Glauber GF (mcnd2)
 Atualização: 2022-06-20
 ---
 
-![Image](https://github.com/glaubergf/ansible-zabbix/blob/main/start_zabbix.jpg)
+![Image](https://github.com/glaubergf/ansible-zabbix/blob/main/pictures/start_zabbix.jpg)
 
 # Instalar e Configurar o Zabbix com o Ansible
 
