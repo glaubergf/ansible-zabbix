@@ -16,7 +16,7 @@ O **Ansible** trabalha com os conceitos de inventário (_lista de máquinas que 
 
 ## Comandos
 
-* Para checar cada role, execute o Ansible com o parâmetro '-t' seguida da tag da role e "-C' para apenas checar sem executar.
+* Para checar cada role, execute o Ansible com o parâmetro "-t" seguida da tag da role e "-C" para apenas checar sem executar.
 
 Exemplo para a role 'config_initial':
 ```
